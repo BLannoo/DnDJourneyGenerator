@@ -1,8 +1,25 @@
-import numpy
 import random
+
 import matplotlib.pyplot as plt
-from scipy.spatial import voronoi_plot_2d, Voronoi
+import numpy
 import pandas
+from scipy.spatial import voronoi_plot_2d, Voronoi
+
+import filecmp
+testing_mode = True
+if testing_mode:
+    random.seed(0)
+    hard_coded_input = ["", "50", "10", "W", "0", "0", "20", "20", "5000", "y", "out"]
+
+
+def get_user_input_if_no_input_available(prompt: str):
+    if not testing_mode:
+        return input(prompt)
+    print(prompt)
+    next_input = hard_coded_input.pop(0)
+    print(f"The question was automatically answered with: {next_input}\n")
+    return next_input
+
 
 points = [] #assigned points
 #allowedpos = [startpos*granularity] #unused, was planned for use with arc constraints
@@ -28,7 +45,6 @@ loopdiffs = []
 fixed = []
 loopcolours = []
 
-
 tilesx = []
 tilesy = []
 colours = []
@@ -36,11 +52,11 @@ event_descriptions = []
 path_descriptions = []
 event_names = []
 
-paths= [] #paths that each point is on
-eventnames = [] #path id- event number
+paths = []  # paths that each point is on
+eventnames = []  # path id- event number
 
 load_old_data = False
-loadfile = str(input("Name of save file (.csv) to load (leave blank for new maps)\n"))
+loadfile = str(get_user_input_if_no_input_available("Name of save file (.csv) to load (leave blank for new maps)\n"))
 if not loadfile == "":
     load_old_data = True
     if loadfile.find(".csv") == -1:
@@ -116,16 +132,16 @@ granularity = 1 #points per unit distance. Unused, may be needed in conversion t
 highpathdistance = 0
 pathdistance = highpathdistance*granularity
 try:
-    pathdistance = int(input("How far is your journey? (nearest mile) (type 0 for no new journey)\n"))
+    pathdistance = int(get_user_input_if_no_input_available("How far is your journey? (nearest mile) (type 0 for no new journey)\n"))
 except:
-    pathdistance = int(input("Number not recognised, please try again:\n"))
+    pathdistance = int(get_user_input_if_no_input_available("Number not recognised, please try again:\n"))
 
 intractability = 20
 if pathdistance > 0:
     try:
-        intractability = int(input("Intractability of new path? \nIntractability determines maximum DC of events on path. Likelihood of events per mile, as a percentage, is half the intractability\n"))
+        intractability = int(get_user_input_if_no_input_available("Intractability of new path? \nIntractability determines maximum DC of events on path. Likelihood of events per mile, as a percentage, is half the intractability\n"))
     except:
-        intractability = int(input("Number not recognised, please try again:\n"))
+        intractability = int(get_user_input_if_no_input_available("Number not recognised, please try again:\n"))
 eventchancemod = 0.005
 startexists = False
 endexists = False
@@ -139,7 +155,7 @@ if pathdistance > 0:
     colour_descriptions = ("Open fields or flat ground","Rivers or streams","Swamps, fens, or other muddy terrain","Mountains, hills, or rocky areas","Forests or other wooded areas","Coastline","Desert","Arctic or snowy terrain","Volcanic or geologically active areas","Caves")
     for letterpos in range(0,len(colour_options)):
         print(f"{letterpos}    ({colour_options[letterpos]})    {colour_descriptions[letterpos]}")
-    colour_input = input("What terrain best describes this part of your journey? (number or one-letter code)\n")
+    colour_input = get_user_input_if_no_input_available("What terrain best describes this part of your journey? (number or one-letter code)\n")
     if colour_options.find(colour_input) != -1:
         mainpathcolour = colour_input
     else:
@@ -150,25 +166,25 @@ if pathdistance > 0:
             print(f"Not understood, using {mainpathcolour}")
 
 if load_old_data and pathdistance > 0:
-    loadinput = input("Index of existing startpoint, type n for new startpoint\n")
+    loadinput = get_user_input_if_no_input_available("Index of existing startpoint, type n for new startpoint\n")
     try:
         startindex = int(loadinput)
         startexists = True
     except:
-        newx = input("x coordinate of new startpoint?\n")
-        newy = input("y coordinate of new startpoint?\n")
+        newx = get_user_input_if_no_input_available("x coordinate of new startpoint?\n")
+        newy = get_user_input_if_no_input_available("y coordinate of new startpoint?\n")
         try:
             startpos = [float(newx),float(newy)]
         except:
             print("coordinates not recognised, beginning from origin (0,0)")
             startpos = [0,0]
-    loadinput = input("Index of existing endpoint, type n for new startpoint\n")
+    loadinput = get_user_input_if_no_input_available("Index of existing endpoint, type n for new startpoint\n")
     try:
         endindex = int(loadinput)
         endexists = True
     except:
-        newx = input("x coordinate of new endpoint?\n")
-        newy = input("y coordinate of new endpoint?\n")
+        newx = get_user_input_if_no_input_available("x coordinate of new endpoint?\n")
+        newy = get_user_input_if_no_input_available("y coordinate of new endpoint?\n")
         try:
             endpos = [float(newx),float(newy)]
         except:
@@ -176,15 +192,15 @@ if load_old_data and pathdistance > 0:
             print(f"coordinates not recognised, beginning from origin ({newx},{newx})")
             endpos = [newx,newx]
 elif pathdistance > 0:
-    newx = input("x coordinate of startpoint?\n")
-    newy = input("y coordinate of startpoint?\n")
+    newx = get_user_input_if_no_input_available("x coordinate of startpoint?\n")
+    newy = get_user_input_if_no_input_available("y coordinate of startpoint?\n")
     try:
         startpos = [float(newx),float(newy)]
     except:
         print("coordinates not recognised, beginning from origin (0,0)")
         startpos = [0,0]
-    newx = input("x coordinate of new endpoint?\n")
-    newy = input("y coordinate of new endpoint?\n")
+    newx = get_user_input_if_no_input_available("x coordinate of new endpoint?\n")
+    newy = get_user_input_if_no_input_available("y coordinate of new endpoint?\n")
     try:
         endpos = [float(newx),float(newy)]
     except:
@@ -1127,7 +1143,7 @@ threshold = 0.5
 turnsnochange = 0
 attempt = 0
 try:
-    attempt_input = int(input("Map-making calculations to perform? \n(High means more time calculating, low means some distances may not be correct. Minimum is ten, default is 5000)\n"))
+    attempt_input = int(get_user_input_if_no_input_available("Map-making calculations to perform? \n(High means more time calculating, low means some distances may not be correct. Minimum is ten, default is 5000)\n"))
 except:
     attempt_input = 5000
 attemptsmax = int(max(attempt_input/len(points),10) )
@@ -1323,14 +1339,15 @@ for pointindex in range(0,len(points)):
 
 plt.xlim(numpy.average(backgroundrange[0])-float(max(backgroundsize)*0.6),numpy.average(backgroundrange[0])+float(max(backgroundsize)*0.6))
 plt.ylim(numpy.average(backgroundrange[1])-float(max(backgroundsize)*0.6),numpy.average(backgroundrange[1])+float(max(backgroundsize)*0.6))
-plt.show()
+if not testing_mode:
+    plt.show()
 
 dfsave = pandas.DataFrame(dictsave)
 print(dfsave)
 
-save = input("Save new points? y/n\n")
+save = get_user_input_if_no_input_available("Save new points? y/n\n")
 if (not save.find("y")  ==-1)  or not (save.find("Y") == -1):
-    savefile = input(f"File (.csv) to write to? Default is {loadfile}\n")
+    savefile = get_user_input_if_no_input_available(f"File (.csv) to write to? Default is {loadfile}\n")
     if savefile == "":
         savefile = loadfile
     elif savefile.find(".csv") == -1:
@@ -1339,9 +1356,14 @@ if (not save.find("y")  ==-1)  or not (save.find("Y") == -1):
         dfsave.to_csv(savefile)
         print (savefile)
     except:
-        savefile = input("Could not find file. Please retype filename including .csv extension\n")
+        savefile = get_user_input_if_no_input_available("Could not find file. Please retype filename including .csv extension\n")
         try:
             dfsave.to_csv(savefile)
         except:
             print("Could not save data. Pausing to let you copy data manually. Press enter to quit")
 
+if testing_mode:
+    if not filecmp.cmp("out.csv", "reference-out.csv"):
+        print("WARNING: the reference file has changed")
+    else:
+        print("Congrats, no behaviour has changed")

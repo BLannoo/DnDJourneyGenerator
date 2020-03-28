@@ -1,0 +1,4 @@
+,nextpoint,nextdist,prevpoint,prevdist,startpoint,fromdist,endgoal,remdist,paths,points,event_dcs,colours,event_descriptions,path_descriptions,fixed,event_names
+0,[2],[35],[0],[0],[0],[0],[1],[50],[0],"[0.0, 0.0]",[10],W,Starting Point,0 miles from Point 0 (starting point). 35 miles to Point 2. ,True,Point 0 (starting point)
+1,[1],[0],[2],[15],[0],[50],[1],[0],[0],"[20.0, 20.0]",[10],W,End Point,15 miles from Point 2. 0 miles to Point 1 (end point). ,True,Point 1 (end point)
+2,[1],[15],[0],[35],[0],[35],[1],[15],[0],"[12.148449216603938, 32.83727955193005]",[5],B,swamp: A inn is up ahead. The inn looks like a safe spot to rest. A patch of waterlogged ground blocks the path. ,35 miles from Point 0 (starting point). 15 miles to Point 1 (end point). ,False,Point 2
